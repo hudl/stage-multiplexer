@@ -36,7 +36,7 @@ func (r *fakeResponse) WriteHeader(statusCode int) {
 }
 
 func handler(rw http.ResponseWriter, r *http.Request) {
-	file, err := os.Open("./hosts")
+	file, err := os.Open(os.Getenv("SM_HOSTS_FILE"))
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -74,7 +74,7 @@ func handler(rw http.ResponseWriter, r *http.Request) {
 			outreq.Body = ioutil.NopCloser(bytes.NewReader(bodyData.Bytes()))
 		}
 
-		go func()  {
+		go func() {
 			log.Println("Sending request to", u.String())
 			proxy := httputil.NewSingleHostReverseProxy(u)
 			response := new(fakeResponse)
